@@ -1,6 +1,6 @@
 import time
-import os
 import signal
+import sys
 
 class PomodoroTimer:
     def __init__(self, work_time=25, break_time=5, long_break_time=15, sessions=4):
@@ -22,15 +22,18 @@ class PomodoroTimer:
             print(f"Session {self.current_session}/{self.sessions}: Work time!")
             self.run_timer(self.work_time)
             if not self.running: break
+            self.beep()
 
             if self.current_session < self.sessions:
                 print("Break time!")
                 self.run_timer(self.break_time)
                 if not self.running: break
+                self.beep()
             else:
                 print("Long break time!")
                 self.run_timer(self.long_break_time)
                 if not self.running: break
+                self.beep()
 
             self.current_session += 1
 
@@ -47,6 +50,10 @@ class PomodoroTimer:
             seconds = remaining_time % 60
             print(f"{minutes:02d}:{seconds:02d}", end="\r")
             time.sleep(1)
+
+    def beep(self):
+        sys.stdout.write('\a') #\a is the ascii bell character
+        sys.stdout.flush()
 
 if __name__ == "__main__":
     work_minutes = int(input("Enter work time (minutes): ") or 25)
